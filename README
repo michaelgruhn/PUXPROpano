@@ -1,0 +1,89 @@
+Simple bash script to automate the transform images from the Kodak PIXPRO SP360
+into an equirectangular format that is understood by https://pannellum.org/
+
+The crop values might be different for your specific Kodak PIXPRO SP360 camera.
+They can be adjusted in the PUXPROpano.sh file (ref. crop_values_25498235).
+
+The author of this project is in no way affiliated with Kodak. In fact this
+was done because the author hates the original Kodak software. It is stupid!
+Bad quality export (high compressed JPEG). Not batchable! Windows or Mac
+only! Everything that you never want!
+
+
+
+How it works
+============
+PUXPROpano.sh
+-------------
+usage: ./PUXPROpano.sh <input image> <output without jpg extension>
+
+Requires:
+    exiftool
+    nona, enblend  (hugin)
+    bash, sed, rm
+    convert (imagemagick)
+
+Converts the dome/fisheye <input image> from the Kodak SP360 to equirectangular
+image file <output without jpg extension>.jpg
+
+The crop values might be different for your specific Kodak PIXPRO SP360 camera.
+They can be adjusted in the PUXPROpano.sh file (ref. crop_values_25498235).
+
+To batch convert a bunch of files:
+	for file in $(ls *.JPG); do ./PUXPROpano.sh ${file} $(basename ${file} .JPG)_pano; done
+
+PUXPROpano.sh extracts the orientation of the SP360 from the EXIF data and tries to
+rotate the image appropriately ... however, in some (currently one) cases the
+orientation tag is useless, because it does not report whether the camera is upside down
+or not. Hence sometimes PUXPROpano.sh fails. In such case you must manually rotate the
+panorama image created.
+
+
+generate_gallery.sh
+-------------------
+Generates a html image gallery using pannellum.htm from https://github.com/mpetroff/pannellum
+Please get the latest pannellum.htm from https://github.com/mpetroff/pannellum
+
+To generate a html gallery named gallery.html for all images ending in _pano.jpg in the
+current directory you would do:
+
+	./generate_gallery.sh *_pano.jpg > gallery.html
+
+
+Demo
+====
+
+100_0454.JPG and 100_0561.JPG are two images from a SP360.
+
+100_0454_pano.jpg and 100_0561_pano.jpg where generated via
+
+	for file in $(ls *.JPG); do ./PUXPROpano.sh ${file} $(basename ${file} .JPG)_pano; done
+
+100_0454_thumb.jpg, 100_0561_thumb.jpg and gallery.html where generated via
+
+	./generate_gallery.sh *_pano.jpg > gallery.html
+
+pannellum.html privided by https://github.com/mpetroff/pannellum
+Please get the latest pannellum.htm from https://github.com/mpetroff/pannellum
+
+
+But why?!
+=========
+The Kodak PIXPRO SP360 is a wonderful camera. It allows to take panorama pictures with ease.
+I find those panoramas ofter an excellent way to capture places - far better than can be
+done via a regular camera. E.g. a DSLR will only capture a small section of what you would
+usually see. Doing regular panoramas takes time and sucks ... with the SP360 - click - and
+you are done. No need to turn around in a circle worrying that someone stepping into the image
+could ruin your panorama and thus make you turn another circle, etc.
+
+The main problem with the PIXPRO SP360 is the software provided by Kodak ... its the worst
+thing I have ever seen. - That's all I will say about it.
+
+PUXPROpano is a free and open source solution, combining and adapting existing free and
+open source solutions to work with the SP360.
+
+... more things planned: video conversion, automatic 360 x 180 image (and later video)
+stitching (utilizing a 3D printed 360 x 180 mount), 3D video, adapt pannellum to display
+SP360 images directly, ...
+
+
